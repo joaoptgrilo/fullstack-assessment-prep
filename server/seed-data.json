@@ -1,0 +1,36 @@
+[
+  {
+    "question": "What is your favorite programming language?",
+    "options": ["JavaScript", "Python", "TypeScript", "Rust", "C#"]
+  },
+  {
+    "question": "Which frontend framework do you prefer?",
+    "options": ["React", "Vue", "Svelte", "Angular"]
+  },
+  {
+    "question": "What is your primary development operating system?",
+    "options": ["Windows (with WSL)", "macOS", "Linux (e.g., Ubuntu, Fedora)"]
+  },
+  {
+    "question": "Which database do you prefer for new projects?",
+    "options": ["PostgreSQL", "MySQL / MariaDB", "SQLite", "MongoDB"]
+  },
+  {
+    "question": "How do you prefer to manage application state?",
+    "options": [
+      "Redux / Redux Toolkit",
+      "Context API + Hooks",
+      "Zustand / Jotai",
+      "Vuex / Pinia"
+    ]
+  },
+  {
+    "question": "What is the most important factor when choosing a new job?",
+    "options": [
+      "Compensation & Benefits",
+      "Work-Life Balance",
+      "Career Growth & Learning",
+      "Company Culture"
+    ]
+  }
+]
