@@ -1,0 +1,32 @@
+### Get all polls
+GET http://localhost:3001/api/v1/polls
+
+### Get a single poll (valid ID)
+GET http://localhost:3001/api/v1/polls/1
+
+### Get a single poll (invalid ID)
+GET http://localhost:3001/api/v1/polls/99
+
+### Vote for an option (Happy Path)
+POST http://localhost:3001/api/v1/polls/1/vote
+Content-Type: application/json
+
+{
+    "optionId": 4
+}
+
+### Vote for an option (Failure Case - option doesn't belong to poll)
+POST http://localhost:3001/api/v1/polls/1/vote
+Content-Type: application/json
+
+{
+    "optionId": 7
+}
+
+### Vote for an option (Failure Case - poll does not exitst)
+POST http://localhost:3001/api/v1/polls/99/vote
+Content-Type: application/json
+
+{
+    "optionId": 1
+}
