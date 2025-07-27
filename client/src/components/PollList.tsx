@@ -1,16 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-// Define a TypeScript interface for the shape of our poll data
-// This should match the data sent by our backend API
-interface Poll {
-  id: number;
-  question: string;
-}
+import { PollListData } from "../types"; // <-- IMPORT FROM THE NEW TYPES FILE
 
 const PollList = () => {
   // State to store the list of polls fetched from the API
-  const [polls, setPolls] = useState<Poll[]>([]);
+  const [polls, setPolls] = useState<PollListData[]>([]);
   // State to handle the loading status while we fetch data
   const [loading, setLoading] = useState<boolean>(true);
   // State to store any potential error messages
@@ -18,27 +12,24 @@ const PollList = () => {
 
   // useEffect hook to perform the data fetch when the component mounts
   useEffect(() => {
-    // Define an async function inside the effect to fetch data
     const fetchPolls = async () => {
       try {
-        // The URL of our backend endpoint
         const response = await fetch("http://localhost:3001/api/v1/polls");
         if (!response.ok) {
           throw new Error("Data could not be fetched!");
         }
-        const data: Poll[] = await response.json();
-        setPolls(data); // Update the state with the fetched polls
+        const data: PollListData[] = await response.json();
+        setPolls(data);
       } catch (error: any) {
-        setError(error.message); // Store any error message in state
+        setError(error.message);
       } finally {
-        setLoading(false); // Set loading to false once the fetch is complete
+        setLoading(false);
       }
     };
 
     fetchPolls();
-  }, []); // The empty dependency array [] means this effect runs only once when the component mounts
+  }, []); // The empty dependency array [] means this effect runs only once
 
-  // Conditional rendering based on the state
   if (loading) {
     return <div>Loading polls...</div>;
   }
