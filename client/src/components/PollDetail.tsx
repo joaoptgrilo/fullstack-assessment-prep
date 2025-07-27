@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react"; // <-- Import useCallback
 import { useParams } from "react-router-dom";
 import { PollDetailData, Option } from "../types";
-import VoteButton from "./VoteButton"; // <-- Import the VoteButton component
+import VoteButton from "./VoteButton";
 
 const PollDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -9,14 +9,40 @@ const PollDetail = () => {
   const [poll, setPoll] = useState<PollDetailData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  // *** NEW STATE ***
-  // Add a new state to track when a vote is being submitted
   const [isVoting, setIsVoting] = useState<boolean>(false);
 
-  // This function will be called by the VoteButton
+  // *** REFACTORED DATA FETCHING LOGIC ***
+  // We've extracted the fetch logic into a function that can be reused.
+  // useCallback is used to memoize the function, preventing it from being
+  // recreated on every render, which is a performance best practice.
+  const fetchPollDetail = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`http://localhost:3001/api/v1/polls/${id}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Poll could not be fetched!");
+      }
+      const data: PollDetailData = await response.json();
+      setPoll(data);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]); // The dependency array ensures this function is recreated only if the id changes
+
+  // The useEffect hook now simply calls our memoized fetch function.
+  useEffect(() => {
+    if (id) {
+      fetchPollDetail();
+    }
+  }, [fetchPollDetail, id]); // It now depends on fetchPollDetail
+
   const handleVote = async (optionId: number) => {
-    setIsVoting(true); // Disable buttons
-    setError(null); // Clear previous errors
+    setIsVoting(true);
+    setError(null);
 
     try {
       const response = await fetch(
@@ -35,46 +61,20 @@ const PollDetail = () => {
         throw new Error(errorData.error || "Failed to register vote.");
       }
 
-      // NOTE: The UI update logic will be handled in the next task (Task #15)
-      // For now, we'll just log a success message.
-      console.log("Vote registered successfully!");
+      console.log("Vote registered successfully! Refreshing data...");
+
+      // *** THE KEY CHANGE ***
+      // After a successful vote, call our fetch function again to get the updated data.
+      await fetchPollDetail();
     } catch (error: any) {
       setError(error.message);
     } finally {
-      setIsVoting(false); // Re-enable buttons
+      setIsVoting(false);
     }
   };
 
-  // The useEffect hook for fetching poll details remains the same
-  useEffect(() => {
-    const fetchPollDetail = async () => {
-      // ... (keep the existing fetchPollDetail function as is)
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(
-          `http://localhost:3001/api/v1/polls/${id}`
-        );
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Poll could not be fetched!");
-        }
-        const data: PollDetailData = await response.json();
-        setPoll(data);
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) {
-      fetchPollDetail();
-    }
-  }, [id]);
-
+  // The rendering logic remains exactly the same
   if (loading) return <div>Loading poll details...</div>;
-  // Show a more specific error message if the vote fails
   if (error) return <div>Error: {error}</div>;
   if (!poll) return <div>Poll not found.</div>;
 
@@ -85,7 +85,6 @@ const PollDetail = () => {
         {poll.options.map((option: Option) => (
           <li key={option.id}>
             {option.option_text} - (Votes: {option.votes})
-            {/* Render the VoteButton for each option */}
             <VoteButton
               optionText={option.option_text}
               onVote={() => handleVote(option.id)}
