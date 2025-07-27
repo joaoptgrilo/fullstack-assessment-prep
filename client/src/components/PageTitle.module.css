@@ -1,0 +1,7 @@
+.pageTitle {
+  margin-bottom: 2.5rem;
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--secondary-color);
+  font-family: "Consolas", "Menlo", monospace;
+}

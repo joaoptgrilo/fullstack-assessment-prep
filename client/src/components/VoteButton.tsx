@@ -6,8 +6,8 @@ interface VoteButtonProps {
 
 const VoteButton = ({ optionText, onVote, disabled }: VoteButtonProps) => {
   return (
-    <button onClick={onVote} disabled={disabled} style={{ marginLeft: "1rem" }}>
-      Vote for {optionText}
+    <button onClick={onVote} disabled={disabled} className="voteButton">
+      Vote for "{optionText}"
     </button>
   );
 };

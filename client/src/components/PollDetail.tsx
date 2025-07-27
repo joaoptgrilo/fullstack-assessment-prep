@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { PollDetailData, Option } from "../types";
 import VoteButton from "./VoteButton";
+import styles from "./PollDetail.module.css";
+import PageTitle from "./PageTitle";
 
 const PollDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,9 +12,9 @@ const PollDetail = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isVoting, setIsVoting] = useState<boolean>(false);
+  const [lastVotedOption, setLastVotedOption] = useState<number | null>(null);
 
   const fetchPollDetail = useCallback(async () => {
-    setLoading(true);
     setError(null);
     try {
       const response = await fetch(`http://localhost:3001/api/v1/polls/${id}`);
@@ -38,6 +40,7 @@ const PollDetail = () => {
   const handleVote = async (optionId: number) => {
     setIsVoting(true);
     setError(null);
+    setLastVotedOption(null);
 
     try {
       const response = await fetch(
@@ -55,6 +58,7 @@ const PollDetail = () => {
       }
 
       await fetchPollDetail();
+      setLastVotedOption(optionId);
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -67,12 +71,29 @@ const PollDetail = () => {
   if (!poll) return <div>Poll not found.</div>;
 
   return (
-    <div>
-      <h2>{poll.question}</h2>
-      <ul>
+    <div className={styles.pollDetail}>
+      <PageTitle title={poll.question} />
+
+      <div className={styles.backLinkContainer}>
+        <Link to="/" className={styles.backLink}>
+          ← Back to All Polls
+        </Link>
+      </div>
+
+      <ul className={styles.optionsList}>
         {poll.options.map((option: Option) => (
-          <li key={option.id}>
-            {option.option_text} - (Votes: {option.votes})
+          <li
+            key={option.id}
+            className={`${styles.optionItem} ${
+              lastVotedOption === option.id ? styles.highlight : ""
+            }`}>
+            <span className={styles.optionText}>
+              {option.option_text}
+              <span className={styles.voteCount}>
+                {" "}
+                - (Votes: {option.votes})
+              </span>
+            </span>
             <VoteButton
               optionText={option.option_text}
               onVote={() => handleVote(option.id)}
