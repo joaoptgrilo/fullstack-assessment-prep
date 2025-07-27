@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"; // <-- Import useCallback
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { PollDetailData, Option } from "../types";
 import VoteButton from "./VoteButton";
@@ -11,10 +11,6 @@ const PollDetail = () => {
   const [error, setError] = useState<string | null>(null);
   const [isVoting, setIsVoting] = useState<boolean>(false);
 
-  // *** REFACTORED DATA FETCHING LOGIC ***
-  // We've extracted the fetch logic into a function that can be reused.
-  // useCallback is used to memoize the function, preventing it from being
-  // recreated on every render, which is a performance best practice.
   const fetchPollDetail = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -31,14 +27,13 @@ const PollDetail = () => {
     } finally {
       setLoading(false);
     }
-  }, [id]); // The dependency array ensures this function is recreated only if the id changes
+  }, [id]);
 
-  // The useEffect hook now simply calls our memoized fetch function.
   useEffect(() => {
     if (id) {
       fetchPollDetail();
     }
-  }, [fetchPollDetail, id]); // It now depends on fetchPollDetail
+  }, [fetchPollDetail, id]);
 
   const handleVote = async (optionId: number) => {
     setIsVoting(true);
@@ -49,9 +44,7 @@ const PollDetail = () => {
         `http://localhost:3001/api/v1/polls/${id}/vote`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ optionId }),
         }
       );
@@ -61,10 +54,6 @@ const PollDetail = () => {
         throw new Error(errorData.error || "Failed to register vote.");
       }
 
-      console.log("Vote registered successfully! Refreshing data...");
-
-      // *** THE KEY CHANGE ***
-      // After a successful vote, call our fetch function again to get the updated data.
       await fetchPollDetail();
     } catch (error: any) {
       setError(error.message);
@@ -73,7 +62,6 @@ const PollDetail = () => {
     }
   };
 
-  // The rendering logic remains exactly the same
   if (loading) return <div>Loading poll details...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!poll) return <div>Poll not found.</div>;

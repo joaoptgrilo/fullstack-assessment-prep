@@ -1,9 +1,7 @@
 /**
- * This file contains the TypeScript type definitions for the data structures
- * used throughout the client-side application.
+ * Shared TypeScript type definitions for the client application.
  */
 
-// Interface for a single option within a poll
 export interface Option {
   id: number;
   option_text: string;

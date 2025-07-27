@@ -1,4 +1,3 @@
-// Define the props that this component will accept
 interface VoteButtonProps {
   optionText: string;
   onVote: () => void;

@@ -1,16 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { PollListData } from "../types"; // <-- IMPORT FROM THE NEW TYPES FILE
+import { PollListData } from "../types";
 
 const PollList = () => {
-  // State to store the list of polls fetched from the API
   const [polls, setPolls] = useState<PollListData[]>([]);
-  // State to handle the loading status while we fetch data
   const [loading, setLoading] = useState<boolean>(true);
-  // State to store any potential error messages
   const [error, setError] = useState<string | null>(null);
 
-  // useEffect hook to perform the data fetch when the component mounts
   useEffect(() => {
     const fetchPolls = async () => {
       try {
@@ -28,15 +24,10 @@ const PollList = () => {
     };
 
     fetchPolls();
-  }, []); // The empty dependency array [] means this effect runs only once
+  }, []);
 
-  if (loading) {
-    return <div>Loading polls...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  if (loading) return <div>Loading polls...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
