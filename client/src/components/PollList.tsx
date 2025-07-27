@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { PollListData } from "../types";
+import styles from "./PollList.module.css";
+import PageTitle from "./PageTitle";
 
 const PollList = () => {
   const [polls, setPolls] = useState<PollListData[]>([]);
@@ -31,11 +33,13 @@ const PollList = () => {
 
   return (
     <div>
-      <h1>Polls</h1>
-      <ul>
+      <PageTitle title="All Polls" />
+      <ul className={styles.pollList}>
         {polls.map((poll) => (
-          <li key={poll.id}>
-            <Link to={`/poll/${poll.id}`}>{poll.question}</Link>
+          <li key={poll.id} className={styles.pollItem}>
+            <Link to={`/poll/${poll.id}`} className={styles.pollLink}>
+              {poll.question}
+            </Link>
           </li>
         ))}
       </ul>
