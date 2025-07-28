@@ -15,6 +15,7 @@ const PollDetail = () => {
   const [lastVotedOption, setLastVotedOption] = useState<number | null>(null);
 
   const fetchPollDetail = useCallback(async () => {
+    setLoading(true);
     setError(null);
     try {
       const response = await fetch(`http://localhost:3001/api/v1/polls/${id}`);
@@ -43,19 +44,11 @@ const PollDetail = () => {
     setLastVotedOption(null);
 
     try {
-      const response = await fetch(
-        `http://localhost:3001/api/v1/polls/${id}/vote`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ optionId }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to register vote.");
-      }
+      await fetch(`http://localhost:3001/api/v1/polls/${id}/vote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ optionId }),
+      });
 
       await fetchPollDetail();
       setLastVotedOption(optionId);
@@ -70,6 +63,11 @@ const PollDetail = () => {
   if (error) return <div>Error: {error}</div>;
   if (!poll) return <div>Poll not found.</div>;
 
+  const totalVotes = poll.options.reduce(
+    (sum, option) => sum + option.votes,
+    0
+  );
+
   return (
     <div className={styles.pollDetail}>
       <PageTitle title={poll.question} />
@@ -80,28 +78,39 @@ const PollDetail = () => {
         </Link>
       </div>
 
-      <ul className={styles.optionsList}>
-        {poll.options.map((option: Option) => (
-          <li
-            key={option.id}
-            className={`${styles.optionItem} ${
-              lastVotedOption === option.id ? styles.highlight : ""
-            }`}>
-            <span className={styles.optionText}>
-              {option.option_text}
-              <span className={styles.voteCount}>
-                {" "}
-                - (Votes: {option.votes})
-              </span>
-            </span>
-            <VoteButton
-              optionText={option.option_text}
-              onVote={() => handleVote(option.id)}
-              disabled={isVoting}
-            />
-          </li>
-        ))}
-      </ul>
+      <div className={styles.optionsList}>
+        {poll.options.map((option: Option) => {
+          const percentage =
+            totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
+
+          return (
+            <div
+              key={option.id}
+              className={`${styles.optionBlock} ${
+                lastVotedOption === option.id ? styles.highlight : ""
+              }`}>
+              <div className={styles.optionLabel}>
+                {option.option_text}
+                <span className={styles.voteCount}>({option.votes})</span>
+              </div>
+
+              <div className={styles.barAndButtonWrapper}>
+                <div className={styles.barContainer}>
+                  <div
+                    className={styles.barFiller}
+                    style={{ width: `${percentage}%` }}>
+                    {percentage > 15 && `${percentage.toFixed(0)}%`}
+                  </div>
+                </div>
+                <VoteButton
+                  onVote={() => handleVote(option.id)}
+                  disabled={isVoting}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

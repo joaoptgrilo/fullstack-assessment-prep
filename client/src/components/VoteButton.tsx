@@ -1,13 +1,12 @@
 interface VoteButtonProps {
-  optionText: string;
   onVote: () => void;
   disabled: boolean;
 }
 
-const VoteButton = ({ optionText, onVote, disabled }: VoteButtonProps) => {
+const VoteButton = ({ onVote, disabled }: VoteButtonProps) => {
   return (
     <button onClick={onVote} disabled={disabled} className="voteButton">
-      Vote for "{optionText}"
+      Vote
     </button>
   );
 };

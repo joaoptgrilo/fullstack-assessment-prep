@@ -5,30 +5,10 @@
 .optionsList {
   list-style-type: none;
   padding: 0;
-  margin: 0;
-}
-
-.optionItem {
+  margin: 2rem 0 0 0;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 1.1rem;
-}
-
-.optionItem:first-child {
-  border-top: 1px solid var(--border-color);
-}
-
-.optionText {
-  color: var(--text-color);
-}
-
-.voteCount {
-  color: var(--text-color-secondary);
-  font-size: 0.9rem;
-  margin-left: 0.5rem;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .backLinkContainer {
@@ -47,16 +27,69 @@
   text-decoration: underline;
 }
 
+/* --- Layout for a Single Option Block --- */
+
+.optionBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.optionLabel {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.voteCount {
+  color: var(--text-color-secondary);
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+}
+
+.barAndButtonWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.barContainer {
+  flex-grow: 1;
+  height: 28px;
+  background-color: #3a3a3a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.barFiller {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--primary-variant-color),
+    var(--primary-color)
+  );
+  transition: width 0.5s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 0.75rem;
+  box-sizing: border-box;
+  color: #f0f0f0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 /* --- Highlight Animation --- */
-.highlight {
+.highlight .barContainer {
   animation: highlight-fade 1.5s ease-in-out;
 }
 
 @keyframes highlight-fade {
   0% {
-    background-color: rgba(3, 218, 198, 0.2);
+    box-shadow: 0 0 10px 2px var(--secondary-color);
   }
   100% {
-    background-color: transparent;
+    box-shadow: 0 0 0 0px transparent;
   }
 }
