@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from "../app";
 import db from "../database";
+import { Option } from "@my-app/types";
 
 beforeEach((done) => {
   db.run("UPDATE options SET votes = 0", [], (err) => {
@@ -53,7 +54,7 @@ describe("POST /api/v1/polls/:pollId/vote", () => {
   it("should increment the vote count and return a success message", async () => {
     const initialResponse = await request(app).get("/api/v1/polls/1");
     const optionToVoteFor = initialResponse.body.options.find(
-      (o: any) => o.id === 2
+      (o: Option) => o.id === 2
     );
     const initialVotes = optionToVoteFor.votes;
 
@@ -68,7 +69,7 @@ describe("POST /api/v1/polls/:pollId/vote", () => {
 
     const finalResponse = await request(app).get("/api/v1/polls/1");
     const updatedOption = finalResponse.body.options.find(
-      (o: any) => o.id === 2
+      (o: Option) => o.id === 2
     );
     const finalVotes = updatedOption.votes;
 

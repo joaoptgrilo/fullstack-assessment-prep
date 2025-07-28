@@ -1,18 +1,13 @@
 {
+  "extends": "@joaoptgrilo/dev-config/tsconfig/base.json",
   "compilerOptions": {
-    /* Language and Environment */
     "target": "es2016",
-
-    /* Modules */
-    "module": "commonjs",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "rootDir": "./src",
-
-    /* Emitting Files */
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-
-    /* Type Checking */
     "strict": true,
     "skipLibCheck": true
   },

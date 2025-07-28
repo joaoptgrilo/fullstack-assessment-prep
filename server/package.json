@@ -3,15 +3,16 @@
   "version": "1.0.0",
   "description": "Backend API for the Simple Poll App",
   "main": "dist/server.js",
+  "type": "module",
   "scripts": {
     "start": "ts-node src/server.ts",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "@my-app/types": "^1.0.0",
     "cors": "^2.8.5",
@@ -19,13 +20,16 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
+    "@joaoptgrilo/dev-config": "^1.2.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.1.0",
     "@types/supertest": "^6.0.3",
+    "eslint": "^9.32.0",
     "jest": "^30.0.5",
     "nodemon": "^3.1.0",
+    "prettier": "^3.6.2",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",

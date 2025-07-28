@@ -14,10 +14,8 @@ const DB_SOURCE = "polls.db";
 const db = new sqlite.Database(DB_SOURCE);
 
 /**
- * Initializes the database.
- * This function creates tables if they don't exist and then intelligently
- * seeds them with data from a JSON file.
- * @returns {Promise<void>} A promise that resolves when setup is complete.
+ * Initializes the database by creating tables and seeding them from a JSON file.
+ * Returns a Promise that resolves when the entire setup is complete.
  */
 export function initializeDatabase(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -54,8 +52,8 @@ export function initializeDatabase(): Promise<void> {
 }
 
 /**
- * Seeds the database by inserting polls from seed-data.json
- * only if a poll with the same question does not already exist.
+ * Intelligently seeds the database by inserting polls from seed-data.json
+ * only if they do not already exist.
  */
 async function seedDatabase(): Promise<void> {
   try {
@@ -63,25 +61,45 @@ async function seedDatabase(): Promise<void> {
     const seedFileContent = fs.readFileSync(seedFilePath, "utf-8");
     const seedData: SeedPoll[] = JSON.parse(seedFileContent);
 
-    const dbGet = (sql: string, params: any[] = []): Promise<any> =>
-      new Promise((resolve, reject) => {
-        db.get(sql, params, (err, row) => (err ? reject(err) : resolve(row)));
-      });
-    const dbRun = (sql: string, params: any[] = []): Promise<{ id: number }> =>
-      new Promise((resolve, reject) => {
-        db.run(sql, params, function (err) {
-          err ? reject(err) : resolve({ id: this.lastID });
+    // Promise-based wrappers to allow for async/await with the sqlite3 library
+    const dbGet = (
+      sql: string,
+      params: (string | number)[] = []
+    ): Promise<unknown> => {
+      return new Promise((resolve, reject) => {
+        db.get(sql, params, (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
         });
       });
+    };
+    const dbRun = (
+      sql: string,
+      params: (string | number)[] = []
+    ): Promise<{ id: number }> => {
+      return new Promise((resolve, reject) => {
+        db.run(sql, params, function (err: Error | null) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve({ id: this.lastID });
+          }
+        });
+      });
+    };
 
-    const insertPollSql = `INSERT INTO polls (question) VALUES (?)`;
     const insertOptionSql = `INSERT INTO options (option_text, poll_id) VALUES (?, ?)`;
+    const insertPollSql = `INSERT INTO polls (question) VALUES (?)`;
 
     for (const poll of seedData) {
       const existingPoll = await dbGet(
         `SELECT id FROM polls WHERE question = ?`,
         [poll.question]
       );
+
       if (!existingPoll) {
         const { id: newPollId } = await dbRun(insertPollSql, [poll.question]);
         const stmt = db.prepare(insertOptionSql);
