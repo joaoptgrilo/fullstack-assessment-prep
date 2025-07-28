@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { PollListData } from "../types";
+import { PollListData } from "@my-app/types";
 import styles from "./PollList.module.css";
 import PageTitle from "./PageTitle";
 
