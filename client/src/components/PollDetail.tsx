@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { PollDetailData, Option } from "../types";
+import { PollDetailData, Option } from "@my-app/types";
 import VoteButton from "./VoteButton";
 import styles from "./PollDetail.module.css";
 import PageTitle from "./PageTitle";

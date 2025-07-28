@@ -27,8 +27,6 @@
   text-decoration: underline;
 }
 
-/* --- Layout for a Single Option Block --- */
-
 .optionBlock {
   display: flex;
   flex-direction: column;

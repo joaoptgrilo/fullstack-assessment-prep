@@ -1,19 +1,21 @@
 {
   "compilerOptions": {
     /* Language and Environment */
-    "target": "es2016", // Compile down to a modern, compatible JavaScript version.
+    "target": "es2016",
 
     /* Modules */
-    "module": "commonjs", // Use the standard module system for Node.js.
-    "rootDir": "./src", // All our source TypeScript files will be in a 'src' folder.
+    "module": "commonjs",
+    "rootDir": "./src",
 
     /* Emitting Files */
-    "outDir": "./dist", // Compiled JavaScript output will go into a 'dist' folder.
-    "esModuleInterop": true, // Helps with compatibility between different module types.
-    "forceConsistentCasingInFileNames": true, // Prevents case-sensitive file naming issues.
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
 
     /* Type Checking */
-    "strict": true, // Enforces the highest level of type safety. This is best practice.
-    "skipLibCheck": true // Skips type checking of declaration files from our dependencies.
-  }
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "src/__tests__"]
 }

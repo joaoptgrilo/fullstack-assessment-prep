@@ -1,7 +1,3 @@
-/**
- * Shared TypeScript type definitions for the client application.
- */
-
 export interface Option {
   id: number;
   option_text: string;
