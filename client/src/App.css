@@ -1,9 +1,0 @@
-.container {
-  max-width: 700px;
-  margin: 3rem auto;
-  padding: 2rem 2.5rem;
-  background-color: var(--surface-color);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-}
