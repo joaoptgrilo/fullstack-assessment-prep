@@ -1,10 +1,12 @@
 {
   "name": "fullstack-assessment-prep-monorepo",
-  "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "server",
-    "client",
+    "apps/*",
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "build": "pnpm --filter \"...\" build",
+    "dev": "pnpm --parallel dev"
+  }
 }

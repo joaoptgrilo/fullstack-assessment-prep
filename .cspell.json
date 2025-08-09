@@ -1,0 +1,15 @@
+{
+  "version": "0.2",
+  "import": ["@joaoptgrilo/dev-config/.cspell.json"],
+  "ignorePaths": [
+    "node_modules/**",
+    "client/node_modules/**",
+    "server/node_modules/**",
+    "packages/types/node_modules/**",
+    "package-lock.json",
+    "client/package-lock.json",
+    "server/package-lock.json",
+    "packages/types/package-lock.json"
+  ],
+  "words": ["pollapp", "fullstack", "assessment", "vari", "Segoe", "Menlo"]
+}

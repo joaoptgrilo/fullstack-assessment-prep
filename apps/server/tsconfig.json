@@ -2,11 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "composite": true
+    "module": "CommonJS"
   },
   "include": ["src"],
-  "scripts": {
-    "build": "tsc",
-    "dev": "tsc -w"
-  }
+  "references": [{ "path": "../../packages/types" }]
 }
